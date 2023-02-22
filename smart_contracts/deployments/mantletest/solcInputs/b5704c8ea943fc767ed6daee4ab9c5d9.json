@@ -1,0 +1,38 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/Main.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.12;\nimport \"./Ilock.sol\";\n\ncontract Main {\n    struct User {\n        address lockAddress;\n        string did;\n        address userAddress;\n        string cid;\n    }\n\n    mapping(address => User) public users;\n    User[] public userArray;\n\n    function registerLock(address lockAddress, string memory did, string memory cid) public {\n        ILock lock = ILock(lockAddress);\n        require(lock.isOwner(msg.sender), \"Not owner!\");\n        User memory user = User(lockAddress, did, msg.sender, cid);\n        users[msg.sender] = user;\n        userArray.push(user);\n    }\n\n    function getUsers() public view returns (User[] memory) {\n        return userArray;\n    }\n}\n"
+    },
+    "contracts/Ilock.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.12;\n\ninterface ILock {\n    // balanceOf\n    function balanceOf(address account) external view returns (uint256);\n\n    // isOwner\n    function isOwner(address account) external view returns (bool);\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 1
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
